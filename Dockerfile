@@ -9,3 +9,4 @@ RUN apt-get update
 RUN apt-get install -y nodejs
 # install hoodie
 RUN npm install -g hoodie-cli
+ENTRYPOINT /bin/bash
