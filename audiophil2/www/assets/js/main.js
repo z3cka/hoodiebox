@@ -8,10 +8,7 @@ var hoodie  = new Hoodie();
 var playerInst = new MediaElementPlayer('audio', {
 // new MediaElementPlayer('audio', {
   /* Options */
-  // playstatus: false,
   success: function (player, domObject) {
-    console.log(player);
-    console.log(domObject);
     // wait 'til data is loaded
     player.addEventListener('loadeddata', function(e) {
       // get furthest moment listened
@@ -25,26 +22,21 @@ var playerInst = new MediaElementPlayer('audio', {
     
     // listen for play event and do stuff every 5 seconds
     player.addEventListener('play', function(e) {
-      console.log(e.getCurrentTime);
-      // player.playstatus = true;
-      // console.log(this.getCurrentTime());
-      // if (player.playstatus == true) {
-        var intervalID = setInterval(function() {
-// console.log(player);
-console.log(e);
-          console.log("I've played .. (up 'till)");
-          // console.log(player.getCurrentTime());
-          // hoodie.store.add('moment', {time: player.getCurrentTime()});
-        }, 2000);
-      // }
+      var intervalID = setInterval(function() {
+        getHeadway();
+      }, 2000);
       player.addEventListener('pause', function(e, int) {
-        // console.log(e);
-        // player.playstatus = false;
         clearInterval(intervalID);
       });  
     });
   }
 });
+
+function getHeadway() {
+  console.log("seconds listened");
+  console.log(playerInst.getCurrentTime());
+  hoodie.store.add('moment', {time: playerInst.getCurrentTime()});
+}
 
 // Todos Collection/View
 function Todos($element) {
