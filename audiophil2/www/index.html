@@ -10,13 +10,15 @@
     <link rel="stylesheet" href="assets/vendor/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/prism/prism.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/mediaelementplayer.min.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
   </head>
   <body>
     <div class="container">
       <div class="jumbotron">
-        <h1>testtest</h1>
+        <h1>AudioPhil</h1>
         <p>
-          hoodie playground.
+          a hoodie playground.
         </p>
 
         <div class="hoodie-accountbar">
@@ -68,44 +70,15 @@
       </div>
 
       <div class="content">
+        <audio src="/assets/files/YMIW219_Bryan_Callen.mp3" preload="auto" controls></audio>
+
         <ul id="todolist"></ul>
 
         <input type="text" id="todoinput"  placeholder="new todo ↵" />
       </div>
 
       <div class="code">
-<pre class="language-javascript"><code class="language-javascript">
-// initialize Hoodie
-var hoodie  = new Hoodie()
 
-// initial load of all todo items from the store
-hoodie.store.findAll('todo').then( function(todos) {
-  todos.sort( sortByCreatedAt ).forEach( addTodo )
-})
-
-// when a new todo gets stored, add it to the UI
-hoodie.store.on('add:todo', addTodo)
-// when a user signs out, clear the todo list
-hoodie.account.on('signout', clearTodos)
-
-// handle creating a new task
-$('#todoinput').on('keypress', function(event) {
-  if (event.keyCode == 13) { // ENTER
-    hoodie.store.add('todo', {title: event.target.value});
-    event.target.value = '';
-  }
-})
-
-function addTodo( todo ) {
-  $('#todolist').append('&lt;li&gt;'+todo.title+'&lt;/li&gt;');
-}
-function clearTodos() {
-  $('#todolist').html('');
-}
-function sortByCreatedAt(a, b) {
-  return a.createdAt &gt; b.createdAt
-}
-</code></pre>
       </div><!-- /.code -->
 
       <footer class="copy">
@@ -121,6 +94,7 @@ function sortByCreatedAt(a, b) {
 
     <script src="assets/vendor/hoodie.accountbar.bootstrap.js"></script>
     <script src="assets/vendor/bootstrap.modalform.js"></script>
+    <script src="assets/js/mediaelement-and-player.min.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

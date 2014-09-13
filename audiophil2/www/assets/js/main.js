@@ -2,6 +2,50 @@
 // initialize Hoodie
 var hoodie  = new Hoodie();
 
+// init player
+//$('video,audio').mediaelementplayer(/* Options */);
+// MediaElement('audio', {
+var playerInst = new MediaElementPlayer('audio', {
+// new MediaElementPlayer('audio', {
+  /* Options */
+  // playstatus: false,
+  success: function (player, domObject) {
+    console.log(player);
+    console.log(domObject);
+    // wait 'til data is loaded
+    player.addEventListener('loadeddata', function(e) {
+      // get furthest moment listened
+      hoodie.store.findAll('moment').done(function(foundmoments) {
+        console.log(foundmoments);
+        // set player at the furthest moment listened
+        var headway = foundmoments[0];
+        player.setCurrentTime(headway.time);
+      });
+    }, false);
+    
+    // listen for play event and do stuff every 5 seconds
+    player.addEventListener('play', function(e) {
+      console.log(e.getCurrentTime);
+      // player.playstatus = true;
+      // console.log(this.getCurrentTime());
+      // if (player.playstatus == true) {
+        var intervalID = setInterval(function() {
+// console.log(player);
+console.log(e);
+          console.log("I've played .. (up 'till)");
+          // console.log(player.getCurrentTime());
+          // hoodie.store.add('moment', {time: player.getCurrentTime()});
+        }, 2000);
+      // }
+      player.addEventListener('pause', function(e, int) {
+        // console.log(e);
+        // player.playstatus = false;
+        clearInterval(intervalID);
+      });  
+    });
+  }
+});
+
 // Todos Collection/View
 function Todos($element) {
   var collection = [];
