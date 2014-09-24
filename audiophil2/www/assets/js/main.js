@@ -3,21 +3,23 @@
 var hoodie  = new Hoodie();
 
 // init player
-//$('video,audio').mediaelementplayer(/* Options */);
-// MediaElement('audio', {
 var playerInst = new MediaElementPlayer('audio', {
 // new MediaElementPlayer('audio', {
   /* Options */
   success: function (player, domObject) {
     // wait 'til data is loaded
     player.addEventListener('loadeddata', function(e) {
-      // get furthest moment listened
-      hoodie.store.findAll('moment').done(function(foundmoments) {
-        console.log(foundmoments);
-        // set player at the furthest moment listened
-        var headway = foundmoments[0];
-        player.setCurrentTime(headway.time);
-      });
+      // get furthest moment listened (if loggend in)
+      if (hoodie.account.username) {
+        hoodie.store.findAll('moment').done(function(foundmoments) {
+          console.log(foundmoments.length);
+          if (foundmoments.length > 0) {
+            // set player at the furthest moment listened
+            var headway = foundmoments[0];
+            player.setCurrentTime(headway.time);
+          }
+        });
+      }
     }, false);
     
     // listen for play event and do stuff every 5 seconds
@@ -30,6 +32,25 @@ var playerInst = new MediaElementPlayer('audio', {
       });  
     });
   }
+});
+
+// set play position when user signs in
+hoodie.account.on('signin', function (user) {
+  // get furthest moment listened
+  hoodie.store.findAll('moment').done(function(foundmoments) {
+    console.log(foundmoments.length);
+    if (foundmoments.length > 0) {
+      // set player at the furthest moment listened
+      var headway = foundmoments[0];
+      playerInst.setCurrentTime(headway.time);
+    }
+  });
+});
+
+// reset player when user signs out
+hoodie.account.on('signout', function(user) {
+  // alert('you signed out!');
+  playerInst.setCurrentTime(0);
 });
 
 function getHeadway() {
