@@ -11,12 +11,24 @@ var playerInst = new MediaElementPlayer('audio', {
     player.addEventListener('loadeddata', function(e) {
       // get furthest moment listened (if loggend in)
       if (hoodie.account.username) {
-        hoodie.store.findAll('moment').done(function(foundmoments) {
-          console.log(foundmoments.length);
+        hoodie.store.findAll(function (moment)  {
+          // filter on current source only
+          if (moment.src == "http://hb.sey.gr:8004/assets/files/YMIW210_Josh_Ruben.mp3") {
+          // TODO: make this dynamic instead of using string like ^^
+          // if (moment.src == player.media.currentSrc) {
+            return true;
+          }
+        }).done(function(foundmoments) {
+          // console.table(foundmoments);
           if (foundmoments.length > 0) {
             // set player at the furthest moment listened
-            var headway = foundmoments[0];
-            player.setCurrentTime(headway.time);
+            // find the max value of time in the found momen
+            var headway = Math.max.apply(Math,foundmoments.map(function (o) {
+              return o.time;
+            }));
+            // console.log("headway:")
+            // console.log(headway);
+            player.setCurrentTime(headway);
           }
         });
       }
@@ -38,7 +50,7 @@ var playerInst = new MediaElementPlayer('audio', {
 hoodie.account.on('signin', function (user) {
   // get furthest moment listened
   hoodie.store.findAll('moment').done(function(foundmoments) {
-    console.log(foundmoments.length);
+    // console.log(foundmoments.length);
     if (foundmoments.length > 0) {
       // set player at the furthest moment listened
       var headway = foundmoments[0];
@@ -54,9 +66,13 @@ hoodie.account.on('signout', function(user) {
 });
 
 function getHeadway() {
-  console.log("seconds listened");
-  console.log(playerInst.getCurrentTime());
-  hoodie.store.add('moment', {time: playerInst.getCurrentTime()});
+  // console.table(playerInst.media.currentSrc);
+  // console.log("seconds listened");
+  // console.log(playerInst.getCurrentTime());
+  hoodie.store.add('moment', {
+    time: playerInst.getCurrentTime(),
+    src: playerInst.media.currentSrc
+  });
 }
 
 // Todos Collection/View
